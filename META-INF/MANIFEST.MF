@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: App
+Class-Path: pdfbox-1.8.13.jar commons-logging-1.1.1.jar fontbox-1.8.13.j
+ ar jempbox-1.8.13.jar
+

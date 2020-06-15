@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: App
+Class-Path: commons-logging-1.2.jar fontbox-2.0.19.jar pdfbox-2.0.19.jar
+
