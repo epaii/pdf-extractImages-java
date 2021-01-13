@@ -1,19 +1,19 @@
 
+import com.epaii.pdf.pngs.Manager;
 import org.apache.pdfbox.cos.COSName;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageTree;
+
 import org.apache.pdfbox.pdmodel.PDResources;
 
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.rendering.ImageType;
-import org.apache.pdfbox.rendering.PDFRenderer;
+
 import org.apache.pdfbox.text.PDFTextStripper;
 
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+
 import java.io.File;
 
 import java.io.FileOutputStream;
@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
- 
+
+
 public class App {
     public static void main(String[] args) {
         File file;
@@ -57,28 +58,21 @@ public class App {
 
 
     public static ArrayList<String> PDF2ImagPDFbox(String filePath, String targetFolder,float d_width) {
-        ArrayList<String> out = new ArrayList<String>();
-        PDDocument pdf = null;
+       //long start =  System.currentTimeMillis() ;
+        Manager manager = new Manager(filePath,targetFolder,d_width);
         try {
-            pdf = PDDocument.load(new File(filePath));
-            PDFRenderer pdfRenderer = new PDFRenderer(pdf);
-            PDPageTree pageTree = pdf.getPages();
-            int pageCounter = 0;
-            int pagetotle = pageTree.getCount();
-            for(PDPage page : pageTree){
-                float width = page.getCropBox().getWidth();
-                float scale =  (float) (d_width/width);
-                BufferedImage bim = pdfRenderer.renderImage(pageCounter,scale, ImageType.RGB);
-                String tofile =targetFolder + pageCounter + "_" + pagetotle + ".png";
-                ImageIO.write(bim, "png", new File(tofile));
-                pageCounter++;
-                out.add(tofile);
-            }
 
+            ArrayList<String> out = manager.doTask(50);
+            //System.out.println(System.currentTimeMillis()-start);
+            return  out;
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        return out;
+        return  new ArrayList<>();
+
+
     }
 
     public static void extractText(File file,String textFile, int page_start, int page_end) {
