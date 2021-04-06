@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 public class Manager {
+    private   int page_start;
+    private   int page_end;
     public float d_width;
     public int pagetotle;
     public  String targetFolder;
@@ -22,10 +24,12 @@ public class Manager {
     private PDDocument pdf;
     private PDFRenderer pdfRenderer;
 
-    public Manager(String filePath, String targetFolder,float d_width)   {
+    public Manager(String filePath, String targetFolder,float d_width,int page_start, int page_end)   {
         this.d_width = d_width;
         this.targetFolder = targetFolder;
         this.filePath =filePath;
+        this.page_start=page_start;
+        this.page_end=page_end;
     }
     public ArrayList<String> doTask(int thread_page_num) throws IOException, InterruptedException {
         File f = new File(filePath);
@@ -35,14 +39,24 @@ public class Manager {
           pdf = PDDocument.load(data);
             pdfRenderer = new PDFRenderer(pdf);
         this.pagetotle =pdf.getNumberOfPages();
-        pngs = new String[pagetotle];
-        int thread_num = (int)Math.ceil((pagetotle*1.0)/(thread_page_num*1.0)) ;
+        if(this.page_start<0){
+            this.page_start = this.pagetotle+ this.page_start;
+        }
+        if(this.page_end<0){
+            this.page_end = this.pagetotle+1+ this.page_end;
+        }
+
+        int outlength = this.page_end-this.page_start;
+
+
+        pngs = new String[outlength];
+        int thread_num = (int)Math.ceil((outlength*1.0)/(thread_page_num*1.0)) ;
           thread_count = new CountDownLatch(thread_num);
         for (int i=0;i<thread_num;i++)
         {
 //            System.out.println(i*thread_page_num);
 //            System.out.println(Math.min((i+1)*thread_page_num,pagetotle-1));
-            new Thread(new Task(this,i*thread_page_num,Math.min((i+1)*thread_page_num,pagetotle))).start();
+            new Thread(new Task(this,this.page_start+i*thread_page_num,Math.min((i+1)*thread_page_num,this.page_end))).start();
         }
         thread_count.await();
         if(allOk){

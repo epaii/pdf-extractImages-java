@@ -33,7 +33,7 @@ public class App {
                 extractText(file, args[2], args.length > 3 ? Integer.parseInt(args[3]) : 0, args.length > 4 ? Integer.parseInt(args[4]) : -1);
                 return;
             }else if(args[0].equals("pages-images")){
-                out = PDF2ImagPDFbox(args[1],args[2], args.length > 3 ? Float.parseFloat(args[3]) : 1000);
+                out = PDF2ImagPDFbox(args[1],args[2], args.length > 3 ? Float.parseFloat(args[3]) : 1000,args.length > 4 ? Integer.parseInt(args[4]) : 0, args.length > 5 ? Integer.parseInt(args[5]) : -1);
             }else{
                 file = new File(args[0]);
                 out = extractImages(file, args[1], args.length > 2 ? Integer.parseInt(args[2]) : -1, args.length > 3 ? Integer.parseInt(args[3]) : -1, args.length > 4 ? Integer.parseInt(args[4]) : -1, args.length > 5 ? Integer.parseInt(args[5]) : -1);
@@ -57,9 +57,9 @@ public class App {
     }
 
 
-    public static ArrayList<String> PDF2ImagPDFbox(String filePath, String targetFolder,float d_width) {
+    public static ArrayList<String> PDF2ImagPDFbox(String filePath, String targetFolder,float d_width,int page_start, int page_end) {
        //long start =  System.currentTimeMillis() ;
-        Manager manager = new Manager(filePath,targetFolder,d_width);
+        Manager manager = new Manager(filePath,targetFolder,d_width,page_start,page_end);
         try {
 
             ArrayList<String> out = manager.doTask(50);
